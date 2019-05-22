@@ -4,12 +4,13 @@ $errors = "";
     //CONNECT TO THE DATABASE:
     $db = mysqli_connect('localhost', 'root', '', 'todolist');
 
-    $sql = "CREATE TABLE tasks (
-        id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-        task VARCHAR(50),
+    $sql = "CREATE TABLE IF NOT EXISTS tasks (
+        id INT(6) UNSIGNED AUTO_INCREMENT,
+        tasks VARCHAR(50),
         duedate VARCHAR(50),
-        active VARCHAR(50)
-        )";
+        active VARCHAR(50),
+        primary key (id)
+        );";
 
     if(isset($_POST['submit'])) {
 
@@ -19,7 +20,7 @@ $errors = "";
         if(empty($task)){
             $errors = "In order to submit, please add a task.";
         } else {
-            mysqli_query($db, "INSERT INTO tasks (task, duedate) VALUES ('$task', '$due')");
+            mysqli_query($db, "INSERT INTO tasks (tasks, duedate) VALUES ('$task', '$due')");
             header('location: index.php');
         }
     }
@@ -32,7 +33,7 @@ $errors = "";
         header('location: index.php');
     }
     
-    $tasks = mysqli_query($db, "SELECT * FROM tasks ORDER BY task");
+    $tasks = mysqli_query($db, "SELECT * FROM tasks ORDER BY tasks");
 
     //TO UPDATE A TASK:
     if(isset($_POST['update'])) {
@@ -43,8 +44,9 @@ $errors = "";
 
         if($_POST['update']) {
             
-            $sql = "UPDATE tasks SET task='$uTask', due='$uDate' WHERE id='$upT'";
+            $sql = "UPDATE tasks SET tasks='$uTask', duedate='$uDate' WHERE id='$upT'";
             
+
             if ($db->query($sql) === TRUE) {
                 echo "Task updated successfully <br>";
                 header('location: index.php');
@@ -95,7 +97,7 @@ $errors = "";
         <div class="content">
             <input type="text" name="upT" class="task_input" placeholder="Insert Task Number"><br><br>
             <input type="text" name="uTask" class="task_input"placeholder="Update Task Here"><br><br>
-            <input type="date" id="update" name="uDate" class="task_input" min="2019-05-21" max="2019-12-31"><br><br>
+            <input type="date" name="uDate" class="task_input" min="2019-05-21" max="2019-12-31"><br><br>
             <button type="submit" class="task_btn" name="update">Update!</button>
         </div>
         </form>
@@ -116,7 +118,7 @@ $errors = "";
 
                     <tr>
                     <td><?php echo $row['id'];?></td>
-                    <td class="task"><?php echo $row['task'];?></td>
+                    <td class="task"><?php echo $row['tasks'];?></td>
                     <td class="due"><?php echo $row['duedate'];?></td>
                     <td class="delete">
                         <a href="index.php?del_task= <?php echo $row['id'];?>">x</a>
