@@ -36,27 +36,18 @@ $errors = "";
     $tasks = mysqli_query($db, "SELECT * FROM tasks ORDER BY tasks");
 
     //TO UPDATE A TASK:
-    if(isset($_POST['update'])) {
-        
-        $uTask = $_POST['uTask'];
-        $uDate = $_POST['uDate'];
-        $upT = $_POST['upT'];
+   if(isset($_POST['update'])) {
 
-        if($_POST['update']) {
-            
-            $sql = "UPDATE tasks SET tasks='$uTask', duedate='$uDate' WHERE id='$upT'";
-            
+       $uTask = $_POST['uTask'];
+       $uDate = $_POST['uDate'];
+       $upT = $_POST['upT'];
 
-            if ($db->query($sql) === TRUE) {
-                echo "Task updated successfully <br>";
-                header('location: index.php');
+           $sql = "UPDATE tasks SET tasks='$uTask', duedate='$uDate' WHERE id='$upT'";
 
-            } else {
-                echo "Error: " . $sql . "<br>" . $db->error;
-            }
+           mysqli_query($db, "UPDATE tasks SET tasks='$uTask', duedate='$uDate' WHERE id='$upT'");
+           header('location: index.php');
 
-        }
-    }
+       }
 ?>
 
 <!DOCTYPE html>
